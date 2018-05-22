@@ -16,5 +16,10 @@ namespace GymCoachApp
         {
             InitializeComponent();
         }
+
+        private void frmEnduro_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

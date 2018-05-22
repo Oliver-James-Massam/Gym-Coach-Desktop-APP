@@ -7,6 +7,7 @@ namespace GymCoach.Content
 {
     public static class TrainingType
     {
+        public const String QUERY = "FullBody";
         //Constants - Groups
         public const String FULLBODY = "FullBody";
         public const String UPPERBODY = "UpperBody";

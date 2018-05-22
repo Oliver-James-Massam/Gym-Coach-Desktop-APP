@@ -104,8 +104,17 @@
     <Compile Include="frmStrength.Designer.cs">
       <DependentUpon>frmStrength.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="frmEnduro.resx">
+      <DependentUpon>frmEnduro.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmHome.resx">
       <DependentUpon>frmHome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHyper.resx">
+      <DependentUpon>frmHyper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStrength.resx">
+      <DependentUpon>frmStrength.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

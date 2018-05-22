@@ -33,25 +33,31 @@ namespace GymCoachApp
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.lstOverview = new System.Windows.Forms.ListBox();
-            this.lblName = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // cbxGoal
             // 
             this.cbxGoal.FormattingEnabled = true;
+            this.cbxGoal.Items.AddRange(new object[] {
+            "Strength - Maximise strength",
+            "Hypertrophy - Look better aesthetically",
+            "Endurance - Maintain peak performance for longer periods of time"});
             this.cbxGoal.Location = new System.Drawing.Point(12, 25);
             this.cbxGoal.Name = "cbxGoal";
-            this.cbxGoal.Size = new System.Drawing.Size(181, 21);
+            this.cbxGoal.Size = new System.Drawing.Size(324, 21);
             this.cbxGoal.TabIndex = 0;
             // 
             // cbxDays
             // 
             this.cbxDays.FormattingEnabled = true;
+            this.cbxDays.Items.AddRange(new object[] {
+            "1 Day",
+            "2 Days",
+            "3 Days"});
             this.cbxDays.Location = new System.Drawing.Point(12, 67);
             this.cbxDays.Name = "cbxDays";
-            this.cbxDays.Size = new System.Drawing.Size(181, 21);
+            this.cbxDays.Size = new System.Drawing.Size(324, 21);
             this.cbxDays.TabIndex = 1;
             // 
             // label1
@@ -74,53 +80,36 @@ namespace GymCoachApp
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(12, 95);
+            this.btnSettings.Location = new System.Drawing.Point(233, 94);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(120, 23);
+            this.btnSettings.Size = new System.Drawing.Size(103, 23);
             this.btnSettings.TabIndex = 4;
             this.btnSettings.Text = "Change Settings";
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // lstOverview
+            // txtText
             // 
-            this.lstOverview.FormattingEnabled = true;
-            this.lstOverview.Location = new System.Drawing.Point(12, 134);
-            this.lstOverview.Name = "lstOverview";
-            this.lstOverview.Size = new System.Drawing.Size(181, 303);
-            this.lstOverview.TabIndex = 5;
+            this.txtText.Location = new System.Drawing.Point(13, 123);
+            this.txtText.Multiline = true;
+            this.txtText.Name = "txtText";
+            this.txtText.Size = new System.Drawing.Size(323, 303);
+            this.txtText.TabIndex = 6;
             // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(511, 13);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(81, 13);
-            this.lblName.TabIndex = 6;
-            this.lblName.Text = "Exercise Name:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(585, 234);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 7;
-            // 
-            // Form1
+            // frmHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.lblName);
-            this.Controls.Add(this.lstOverview);
+            this.ClientSize = new System.Drawing.Size(349, 466);
+            this.Controls.Add(this.txtText);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbxDays);
             this.Controls.Add(this.cbxGoal);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "frmHome";
+            this.Text = "Gym Coach";
+            this.Load += new System.EventHandler(this.frmHome_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,9 +122,7 @@ namespace GymCoachApp
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.ListBox lstOverview;
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtText;
     }
 }
 

@@ -9,7 +9,8 @@ namespace GymCoach.Content.Agent
     {
         private static PriorityQueue<Node<Exercise>, int> openList = new PriorityQueue<Node<Exercise>, int>();
         private static PriorityQueue<Node<Exercise>, int> closedList = new PriorityQueue<Node<Exercise>, int>();
-        private static PriorityQueue<Node<Exercise>, int> workout = new PriorityQueue<Node<Exercise>, int>();
+        private static List<Node<Exercise>> workout = new List<Node<Exercise>>();
+        private static List<Node<Exercise>> bestAlt = new List<Node<Exercise>>();
         private static Node<Exercise> lastExpanded = new Node<Exercise> ();
         private static Node<Exercise> tree = new Node<Exercise>();
         private static Node<Exercise> push;
@@ -25,27 +26,52 @@ namespace GymCoach.Content.Agent
             , usedUpperLeg = false
             , usedLowerLeg = false;
 
-        public static PriorityQueue<Node<Exercise>, int> searchTree(String trainingType)
+        public static List<Node<Exercise>> searchTree(String trainingType)
         {
             
             if (tree.getElement() == null)
             {
                 buildTree();
             }
+            
             openList.enqueue(tree, calcHeuristic(tree));
             
             while(openList.numElements() > 0)
             {
+                if(bestAlt.Count() > 0)
+                {
+                    foreach (Node<Exercise> n in bestAlt)
+                    {
+                        if(canStore(lastExpanded.getElement().getPrimaryMuscle(), trainingType) == true && n.getElement().getFN() <= openList.peek().getElement().getFN())
+                        {
+                            lastExpanded = n;
+                            bestAlt.Remove(n);
+                            goto Reevaluate;
+                        }
+                    }
+                }
+                
                 lastExpanded = openList.dequeue();
                 foreach (Node<Exercise> j in lastExpanded.getNext())
                 {
                     openList.enqueue(j, calcHeuristic(j));
                 }
+                Reevaluate:;
                 if (lastExpanded.getElement().getHN() == 0 && isTrainingType(trainingType, lastExpanded.getElement().getPrimaryMuscle()) == true)
                 {
-                    workout.enqueue(lastExpanded, calcHeuristic(lastExpanded));
+                    if(canStore(lastExpanded.getElement().getPrimaryMuscle(), trainingType) == true)
+                    {
+                        calcHeuristic(lastExpanded);
+                        workout.Add(lastExpanded);
+                    }
+                    else
+                    {
+                        calcHeuristic(lastExpanded);
+                        bestAlt.Add(lastExpanded);
+                    }
+                    
                 }
-                if(workout.numElements() == 100)
+                if(workout.Count() == 100)
                 {
                     break;
                 }
@@ -453,7 +479,201 @@ namespace GymCoach.Content.Agent
         {
             return openList;
         }
-        
+
+        public static bool canStore(String primaryMuscle, String training)
+        {
+            switch (training)
+            {
+                case TrainingType.FULLBODY:
+                    if (usedChest == true && usedShoulder == true && usedTricep == true && usedBicep == true && usedBack == true && usedUpperLeg == true && usedLowerLeg == true)
+                    {
+                        usedChest = false;
+                        usedShoulder = false;
+                        usedTricep = false;
+                        usedBack = false;
+                        usedBicep = false;
+                        usedUpperLeg = false;
+                        usedLowerLeg = false;
+                        
+                    }
+                    if (TrainingType.CHEST.Equals(primaryMuscle) && usedChest == false)
+                    {
+                        usedChest = true;
+                        return true;
+                    }
+                    else if (TrainingType.SHOULDER.Equals(primaryMuscle) && usedShoulder == false)
+                    {
+                        usedShoulder = true;
+                        return true;
+                    }
+                    else if (TrainingType.TRICEP.Equals(primaryMuscle) && usedTricep == false)
+                    {
+                        usedTricep = true;
+                        return true;
+                    }
+                    else if (TrainingType.BACK.Equals(primaryMuscle) && usedBack == false)
+                    {
+                        usedBack = true;
+                        return true;
+                    }
+                    else if (TrainingType.BICEP.Equals(primaryMuscle) && usedBicep == false)
+                    {
+                        usedBicep = true;
+                        return true;
+                    }
+                    else if ((TrainingType.QUAD.Equals(primaryMuscle) || TrainingType.HAMSTRING.Equals(primaryMuscle) || TrainingType.GLUTE.Equals(primaryMuscle)) && usedUpperLeg == false)
+                    {
+                        usedUpperLeg = true;
+                        return true;
+                    }
+                    else if (TrainingType.CALF.Equals(primaryMuscle) && usedLowerLeg == false)
+                    {
+                        usedLowerLeg = true;
+                        return true;
+                    }
+                    else
+                        return false;
+
+                case TrainingType.UPPERBODY:
+                    if (usedChest == true && usedShoulder == true && usedTricep == true && usedBicep == true && usedBack == true)
+                    {
+                        usedChest = false;
+                        usedShoulder = false;
+                        usedTricep = false;
+                        usedBack = false;
+                        usedBicep = false;
+                    }
+                    if (TrainingType.CHEST.Equals(primaryMuscle) && usedChest == false)
+                    {
+                        usedChest = true;
+                        return true;
+                    }
+                    else if (TrainingType.SHOULDER.Equals(primaryMuscle) && usedShoulder == false)
+                    {
+                        usedShoulder = true;
+                        return true;
+                    }
+                    else if (TrainingType.TRICEP.Equals(primaryMuscle) && usedTricep == false)
+                    {
+                        usedTricep = true;
+                        return true;
+                    }
+                    else if (TrainingType.BACK.Equals(primaryMuscle) && usedBack == false)
+                    {
+                        usedBack = true;
+                        return true;
+                    }
+                    else if (TrainingType.BICEP.Equals(primaryMuscle) && usedBicep == false)
+                    {
+                        usedBicep = true;
+                        return true;
+                    }
+                    else
+                        return false;
+
+                case TrainingType.LOWERBODY:
+                    if (usedUpperLeg == true && usedLowerLeg == true)
+                    {
+                        usedUpperLeg = false;
+                        usedLowerLeg = false;
+                    }
+                    if ((TrainingType.QUAD.Equals(primaryMuscle) || TrainingType.HAMSTRING.Equals(primaryMuscle) || TrainingType.GLUTE.Equals(primaryMuscle)) && usedUpperLeg == false)
+                    {
+                        usedUpperLeg = true;
+                        return true;
+                    }
+                    else if (TrainingType.CALF.Equals(primaryMuscle) && usedLowerLeg == false)
+                    {
+                        usedLowerLeg = true;
+                        return true;
+                    }
+                    else
+                        return false;
+
+                case TrainingType.PUSH:
+                    if (usedChest == true && usedShoulder == true && usedTricep == true)
+                    {
+                        usedChest = false;
+                        usedShoulder = false;
+                        usedTricep = false;
+                    }
+                    if (TrainingType.CHEST.Equals(primaryMuscle) && usedChest == false)
+                    {
+                        usedChest = true;
+                        return true;
+                    }
+                    else if (TrainingType.SHOULDER.Equals(primaryMuscle) && usedShoulder == false)
+                    {
+                        usedShoulder = true;
+                        return true;
+                    }
+                    else if (TrainingType.TRICEP.Equals(primaryMuscle) && usedTricep == false)
+                    {
+                        usedTricep = true;
+                        return true;
+                    }
+                    else
+                        return false;
+
+                case TrainingType.PULL:
+                    if (usedBicep == true && usedBack == true)
+                    {
+                        usedBack = false;
+                        usedBicep = false;
+                    }
+                    if (TrainingType.BACK.Equals(primaryMuscle) && usedBack == false)
+                    {
+                        usedBack = true;
+                        return true;
+                    }
+                    else if (TrainingType.BICEP.Equals(primaryMuscle) && usedBicep == false)
+                    {
+                        usedBicep = true;
+                        return true;
+                    }
+                    else
+                        return false;
+
+                case TrainingType.UPPERLEG:
+                    if (usedUpperLeg == true && usedLowerLeg == true)
+                    {
+                        usedUpperLeg = false;
+                        usedLowerLeg = false;
+                    }
+                    if ((TrainingType.QUAD.Equals(primaryMuscle) || TrainingType.HAMSTRING.Equals(primaryMuscle) || TrainingType.GLUTE.Equals(primaryMuscle)) && usedUpperLeg == false)
+                    {
+                        usedUpperLeg = true;
+                        return true;
+                    }
+                    else if (TrainingType.CALF.Equals(primaryMuscle) && usedLowerLeg == false)
+                    {
+                        usedLowerLeg = true;
+                        return true;
+                    }
+                    else
+                        return false;
+                case TrainingType.LOWERLEG:
+                    if (usedUpperLeg == true && usedLowerLeg == true)
+                    {
+                        usedUpperLeg = false;
+                        usedLowerLeg = false;
+                    }
+                    if ((TrainingType.QUAD.Equals(primaryMuscle) || TrainingType.HAMSTRING.Equals(primaryMuscle) || TrainingType.GLUTE.Equals(primaryMuscle)) && usedUpperLeg == false)
+                    {
+                        usedUpperLeg = true;
+                        return true;
+                    }
+                    else if (TrainingType.CALF.Equals(primaryMuscle) && usedLowerLeg == false)
+                    {
+                        usedLowerLeg = true;
+                        return true;
+                    }
+                    else
+                        return false;
+            }
+            return false;
+        }
+
         public static void setupBools(String trainingType)
         {
             switch (trainingType)
